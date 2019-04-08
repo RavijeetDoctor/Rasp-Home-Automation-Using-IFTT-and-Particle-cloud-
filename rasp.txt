@@ -1,0 +1,136 @@
+int load1 = D6; //pin to which relay is connected
+int load2 = D7;
+int load3 = D2;
+int load4 = D3;
+bool l1 = LOW; //a virtual boolean variable
+bool l2 = LOW;
+bool l3 = LOW;
+bool l4 = LOW;
+int ir = D4;
+int ldr = D5;
+int whiteled = D8;
+
+// setup() is run only once, it's where we set up GPIO and initialise peripherals
+void setup() {
+    Serial.begin(9600);
+    
+  // Setup GPIO
+  pinMode(load1,OUTPUT); // relay pin is set as output
+  pinMode(load2,OUTPUT);
+  pinMode(load3,OUTPUT);
+  pinMode(load4,OUTPUT);
+  pinMode(whiteled,OUTPUT); 
+  pinMode(ldr,INPUT);
+  pinMode(ir,INPUT);
+  digitalWrite(load1,HIGH);
+  digitalWrite(load2,HIGH);
+  digitalWrite(load3,HIGH);
+  digitalWrite(load4,HIGH);
+  digitalWrite(whiteled,LOW);
+  // Subscribe to events published by IFTTT using Particle.subscribe
+  Particle.subscribe("light", myHandler); //turning off function declaration
+  Particle.subscribe("fan", thisHandler); //turning on function declaration
+  Particle.subscribe("ac", myHandler1); //turning off function declaration
+  Particle.subscribe("fridge", thisHandler1); //turning on function declaration
+}
+
+// loop() runs continuously, it's our infinite loop.
+void loop() {
+    int i=digitalRead(ldr);
+    int j=digitalRead(ir);
+    
+    if(i==1 && j==1)
+    {
+        digitalWrite(whiteled,HIGH);
+    }
+    else
+    {
+        digitalWrite(whiteled,LOW);
+    }
+    
+     if (l1==HIGH)
+     {
+         digitalWrite(load1,LOW);
+     }
+else if (l1==LOW)
+      {
+         digitalWrite(load1,HIGH);
+     }
+     if (l2==HIGH)
+     {
+         digitalWrite(load2,LOW);
+     }
+else if (l2==LOW)
+      {
+         digitalWrite(load2,HIGH);
+     }
+     
+if (l3==HIGH)
+     {
+         digitalWrite(load3,LOW);
+     }
+else if (l3==LOW)
+      {
+         digitalWrite(load3,HIGH);
+     }
+
+if (l4==HIGH)
+     {
+         digitalWrite(load4,LOW);
+     }
+else if (l4==LOW)
+      {
+         digitalWrite(load4,HIGH);
+     }
+
+}
+
+//our events are called when IFTTT applets are triggered
+void myHandler(const char *event, const char *data)
+{
+     if (strstr(event, "off"))
+  {
+    l1=LOW;
+  }
+  else if(strstr(event, "on"))
+  {
+    l1=HIGH;
+  }
+    
+}
+
+void thisHandler(const char *event, const char *data)
+{
+          if (strstr(event, "off"))
+  {
+    l2=LOW;
+  }
+  else if(strstr(event, "on"))
+  {
+    l2=HIGH;
+  }
+}
+void myHandler1(const char *event, const char *data)
+{
+       if (strstr(event, "off"))
+  {
+    l3=LOW;
+  }
+  else if(strstr(event, "on"))
+  {
+    l3=HIGH;
+  }
+}
+void thisHandler1(const char *event, const char *data)
+{
+       if (strstr(event, "off"))
+  {
+    l4=LOW;
+  }
+  else if(strstr(event, "on"))
+  {
+    l4=HIGH;
+  }
+}
+
+
